@@ -1,0 +1,18 @@
+# ============================================================
+# matlab-mcp-workspace plugin — .gitignore
+# ============================================================
+
+# --- IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Claude local settings (user-specific, not plugin content)
+.claude/

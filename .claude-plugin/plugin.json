@@ -1,0 +1,24 @@
+{
+  "name": "matlab-mcp-workspace",
+  "version": "1.0.0",
+  "description": "Structured workspace management for MATLAB MCP projects. Enforces directory conventions, session protocols, cross-session continuity via README state machines, and integrates with the matlab-skills plugin (live-script, test-creator, test-execution, performance-optimizer, uihtml-app-builder, digital-filter-design). This skill handles WHERE files go; matlab-skills handles HOW code is written.",
+  "author": {
+    "name": "felimet",
+    "url": "https://github.com/felimet"
+  },
+  "homepage": "https://github.com/felimet/matlab-mcp-workspace",
+  "repository": "https://github.com/felimet/matlab-mcp-workspace",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "matlab",
+    "workspace",
+    "project-management",
+    "mcp",
+    "session-management",
+    "directory-structure",
+    "cross-session",
+    "git-integration",
+    "matlab-skills",
+    "scientific-computing"
+  ]
+}

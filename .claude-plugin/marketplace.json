@@ -1,0 +1,36 @@
+{
+  "name": "matlab-mcp-workspace",
+  "owner": {
+    "name": "felimet"
+  },
+  "metadata": {
+    "description": "Structured workspace management for MATLAB MCP projects. Enforces directory conventions, session protocols, cross-session continuity, and integrates with the matlab-skills plugin.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "matlab-mcp-workspace",
+      "source": "./",
+      "description": "Structured workspace management for MATLAB MCP projects",
+      "version": "1.0.0",
+      "author": {
+        "name": "felimet"
+      },
+      "homepage": "https://github.com/felimet/matlab-mcp-workspace",
+      "repository": "https://github.com/felimet/matlab-mcp-workspace",
+      "license": "BSD-3-Clause",
+      "keywords": [
+        "matlab",
+        "workspace",
+        "project-management",
+        "mcp",
+        "session-management",
+        "directory-structure",
+        "cross-session",
+        "git-integration",
+        "matlab-skills",
+        "scientific-computing"
+      ]
+    }
+  ]
+}
