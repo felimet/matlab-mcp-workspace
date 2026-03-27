@@ -2,10 +2,22 @@
 
 > **Skill: MATLAB MCP Workspace 結構化管理 + matlab-skills Plugin 整合**
 
-
 [![matlab-mcp-core-server](https://img.shields.io/badge/matlab-matlab--mcp--core--server-blue?style=flat-square&logo=github)](https://github.com/matlab/matlab-mcp-core-server)
 [![matlab-skills](https://img.shields.io/badge/matlab-skills-blue?style=flat-square&logo=github)](https://github.com/matlab/skills)
 
+---
+
+## 安裝
+
+在 Claude Code 中執行以下指令：
+
+```bash
+# 1. 新增 Marketplace 來源
+claude plugin marketplace add felimet/matlab-mcp-workspace
+
+# 2. 進行安裝
+claude plugin install matlab-mcp-workspace
+```
 
 ---
 
