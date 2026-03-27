@@ -31,7 +31,7 @@ claude plugin install matlab-mcp-workspace
 | 跨對話失去 context | README.md 狀態機 + Session Announcement |
 | 函數被覆蓋 / 版本衝突 | 結構性改寫先備份 + Git 整合 |
 | 每次重啟 path 消失 | `startup_workspace.m` 自動維護 `startup.m` |
-| 路徑寫死 → 換機器就炸 | 所有腳本用 `mfilename` 自我定位，零 hardcode |
+| 路徑寫死 → 換機器就炸 | 所有程式碼用 `mfilename` 自我定位，零 hardcode |
 | matlab-skills 不知道要寫去哪 | 本 skill 先跑確認路徑，再交棒給對應 skill |
 
 ---
@@ -67,8 +67,8 @@ init_project.m 建立 tests\ 等       執行 buildtool / runtests
 ## 路徑設計原則
 
 > [!IMPORTANT]
-> Workspace root 路徑**從不寫死**在任何腳本或文件中。
-> `scripts\` 裡的腳本用 `mfilename('fullpath')` 反推自身位置，`src\` 裡的程式碼用 `get_ws_root()` 找到標記檔 `ws_config.m`。兩條路，都不需要 hardcode。
+> Workspace root 路徑**從不寫死**在任何程式碼或文件中。
+> `scripts\` 裡的程式碼用 `mfilename('fullpath')` 反推自身位置，`src\` 裡的程式碼用 `get_ws_root()` 找到標記檔 `ws_config.m`。兩條路，都不需要 hardcode。
 
 文件中所有 `<WORKSPACE_ROOT>` 均代表你的實際 workspace 根目錄，可以是任何路徑。
 
@@ -97,7 +97,7 @@ init_project.m 建立 tests\ 等       執行 buildtool / runtests
 ├── _temp\                      # 臨時測試（≤ 14 天生命週期）
 ├── _shared\                    # 跨專案工具函數（永久）
 ├── _archive\                   # 已完成專案（封存）
-├── scripts\                    # 本 skill 工具腳本
+├── scripts\                    # 本 skill 工具程式碼
 ├── ws_config.m                 # Workspace 標記檔（勿移動）
 ├── startup.m                   # 由 startup_workspace.m 自動維護
 └── .gitignore
@@ -109,17 +109,17 @@ init_project.m 建立 tests\ 等       執行 buildtool / runtests
 
 ```matlab
 % 1. 每次 session 開始（腳本自己知道 workspace 在哪）
-run('<WORKSPACE_ROOT>\scripts\startup_workspace.m')
+run('<WORKSPACE_ROOT>\skills\matlab-mcp-workspace\scripts\startup_workspace.m')
 
 % 2. 新建 project（建立 src\、tests\、buildfile.m 等）
 % → 修改 init_project.m 的 CONFIG 後執行
 
 % 3. 繼續舊 project
-run('<WORKSPACE_ROOT>\scripts\list_workspace.m')
+run('<WORKSPACE_ROOT>\skills\matlab-mcp-workspace\scripts\list_workspace.m')
 % → 確認 folder 名稱 → cd 進去 → 讀 README.md
 
 % 4. 定期健康檢查
-run('<WORKSPACE_ROOT>\scripts\workspace_health.m')
+run('<WORKSPACE_ROOT>\skills\matlab-mcp-workspace\scripts\workspace_health.m')
 ```
 
 > [!NOTE]
@@ -131,12 +131,12 @@ run('<WORKSPACE_ROOT>\scripts\workspace_health.m')
 
 | 腳本 | 何時用 |
 |------|--------|
-| `scripts/startup_workspace.m` | 每次 session 開始 |
-| `scripts/init_project.m` | 建立新 project（含 tests\ + buildfile.m）|
-| `scripts/list_workspace.m` | 跨對話繼續前 |
-| `scripts/upgrade_temp.m` | Temp 決定保留時 |
-| `scripts/workspace_health.m` | 定期清理 |
-| `scripts/get_ws_root.m` | 在 `src\` 程式碼中取得 workspace root |
+| `skills/matlab-mcp-workspace/scripts/startup_workspace.m` | 每次 session 開始 |
+| `skills/matlab-mcp-workspace/scripts/init_project.m` | 建立新 project（含 tests\ + buildfile.m）|
+| `skills/matlab-mcp-workspace/scripts/list_workspace.m` | 跨對話繼續前 |
+| `skills/matlab-mcp-workspace/scripts/upgrade_temp.m` | Temp 決定保留時 |
+| `skills/matlab-mcp-workspace/scripts/workspace_health.m` | 定期清理 |
+| `skills/matlab-mcp-workspace/scripts/get_ws_root.m` | 在 `src\` 程式碼中取得 workspace root |
 
 ---
 
@@ -144,14 +144,14 @@ run('<WORKSPACE_ROOT>\scripts\workspace_health.m')
 
 | Reference | 內容 |
 |-----------|------|
-| [`references/01-workspace-structure.md`](references/01-workspace-structure.md) | 目錄結構、slug 命名規則表、output 命名格式 |
-| [`references/02-session-protocol.md`](references/02-session-protocol.md) | Announcement 模板、session 啟動流程、path 解析規則 |
-| [`references/03-project-lifecycle.md`](references/03-project-lifecycle.md) | 狀態轉換表、phase 觸發/動作、temp 升級觸發 |
-| [`references/04-versioning.md`](references/04-versioning.md) | .gitignore 模板、commit 格式、backup 判斷矩陣 |
-| [`references/05-shared-utilities.md`](references/05-shared-utilities.md) | docstring 模板、分類對照表、`_shared/README.md` 格式 |
-| [`references/06-decision-guide.md`](references/06-decision-guide.md) | 四級匹配表、消歧互動格式、信號表 |
-| [`references/07-plugin-integration.md`](references/07-plugin-integration.md) | 各 skill 目錄對應表、完整 project 結構 |
-| [`references/08-project-docs.md`](references/08-project-docs.md) | docs\ 職責表、Docs Update Prompt 觸發表 |
+| [`skills/matlab-mcp-workspace/references/01-workspace-structure.md`](skills/matlab-mcp-workspace/references/01-workspace-structure.md) | 目錄結構、slug 命名規則表、output 命名格式 |
+| [`skills/matlab-mcp-workspace/references/02-session-protocol.md`](skills/matlab-mcp-workspace/references/02-session-protocol.md) | Announcement 模板、session 啟動流程、path 解析規則 |
+| [`skills/matlab-mcp-workspace/references/03-project-lifecycle.md`](skills/matlab-mcp-workspace/references/03-project-lifecycle.md) | 狀態轉換表、phase 觸發/動作、temp 升級觸發 |
+| [`skills/matlab-mcp-workspace/references/04-versioning.md`](skills/matlab-mcp-workspace/references/04-versioning.md) | .gitignore 模板、commit 格式、backup 判斷矩陣 |
+| [`skills/matlab-mcp-workspace/references/05-shared-utilities.md`](skills/matlab-mcp-workspace/references/05-shared-utilities.md) | docstring 模板、分類對照表、`_shared/README.md` 格式 |
+| [`skills/matlab-mcp-workspace/references/06-decision-guide.md`](skills/matlab-mcp-workspace/references/06-decision-guide.md) | 四級匹配表、消歧互動格式、信號表 |
+| [`skills/matlab-mcp-workspace/references/07-plugin-integration.md`](skills/matlab-mcp-workspace/references/07-plugin-integration.md) | 各 skill 目錄對應表、完整 project 結構 |
+| [`skills/matlab-mcp-workspace/references/08-project-docs.md`](skills/matlab-mcp-workspace/references/08-project-docs.md) | docs\ 職責表、Docs Update Prompt 觸發表 |
 
 ### docs/
 
@@ -159,7 +159,7 @@ run('<WORKSPACE_ROOT>\scripts\workspace_health.m')
 |------|------|
 | [`docs/01-workspace-structure.md`](docs/01-workspace-structure.md) | 目錄結構完整說明（含邊界情境、範例）|
 | [`docs/02-session-protocol.md`](docs/02-session-protocol.md) | Session 協議完整說明（含範例輸出）|
-| [`docs/03-project-lifecycle.md`](docs/03-project-lifecycle.md) | 專案生命週期完整說明（含封存腳本）|
+| [`docs/03-project-lifecycle.md`](docs/03-project-lifecycle.md) | 專案生命週期完整說明（含封存程式碼）|
 | [`docs/04-versioning.md`](docs/04-versioning.md) | 版本控制完整說明（含 Git 操作指令）|
 | [`docs/05-shared-utilities.md`](docs/05-shared-utilities.md) | Shared 函數完整說明（含工作流程）|
 | [`docs/06-decision-guide.md`](docs/06-decision-guide.md) | 跨對話決策完整說明（含錯誤情境）|
@@ -178,17 +178,6 @@ matlab-mcp-workspace/
 ├── .gitignore                      # Git 忽略清單
 ├── LICENSE                         # 授權條款 (BSD-3-Clause)
 ├── README.md                       # 本文件（導航入口）
-├── SKILL.md                        # Claude 觸發與核心協議
-├── ws_config.m                     # Workspace 根目錄標記（勿移動）
-├── references/                     # 精簡版文件（表格 + 決策樹 + 模板）
-│   ├── 01-workspace-structure.md
-│   ├── 02-session-protocol.md
-│   ├── 03-project-lifecycle.md
-│   ├── 04-versioning.md
-│   ├── 05-shared-utilities.md
-│   ├── 06-decision-guide.md
-│   ├── 07-plugin-integration.md
-│   └── 08-project-docs.md
 ├── docs/                           # 完整操作說明文檔
 │   ├── 01-workspace-structure.md
 │   ├── 02-session-protocol.md
@@ -198,17 +187,30 @@ matlab-mcp-workspace/
 │   ├── 06-decision-guide.md
 │   ├── 07-plugin-integration.md
 │   └── 08-project-docs.md
-└── scripts/                        # MATLAB 工具腳本
-    ├── startup_workspace.m         # 每次 session 開始時執行
-    ├── init_project.m              # 建立新 project（含 tests\、docs\、buildfile.m）
-    ├── list_workspace.m            # 跨對話繼續前列出專案狀態
-    ├── upgrade_temp.m              # 將臨時測試升級為永久專案
-    ├── workspace_health.m          # 定期清理檢查
-    └── get_ws_root.m               # 取得 workspace 根目錄路徑
+└── skills/                         # Skill 核心資料夾
+    └── matlab-mcp-workspace/
+        ├── SKILL.md                # Claude 觸發與核心協議
+        ├── references/             # 精簡版文件（表格 + 決策樹 + 模板）
+        │   ├── 01-workspace-structure.md
+        │   ├── 02-session-protocol.md
+        │   ├── 03-project-lifecycle.md
+        │   ├── 04-versioning.md
+        │   ├── 05-shared-utilities.md
+        │   ├── 06-decision-guide.md
+        │   ├── 07-plugin-integration.md
+        │   └── 08-project-docs.md
+        └── scripts/                # MATLAB 工具程式碼
+            ├── ws_config.m         # Workspace 根目錄標記（勿移動）
+            ├── startup_workspace.m # 每次 session 開始時執行
+            ├── init_project.m      # 建立新 project（含 tests\、docs\、buildfile.m）
+            ├── list_workspace.m    # 跨對話繼續前列出專案狀態
+            ├── upgrade_temp.m      # 將臨時測試升級為永久專案
+            ├── workspace_health.m  # 定期清理檢查
+            └── get_ws_root.m               # 取得 workspace 根目錄路徑
 ```
 
 ---
 
 > [!NOTE]
-> 所有 `.m` 腳本僅依賴 base MATLAB，不需要任何 Toolbox。
+> 所有 `.m` 程式碼僅依賴 base MATLAB，不需要任何 Toolbox。
 > 所有 `.md` 文件遵循 GitHub Flavored Markdown（GFM）規範，含 Alert 語法。

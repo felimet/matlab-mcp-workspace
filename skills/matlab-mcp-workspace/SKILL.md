@@ -8,7 +8,7 @@ version: 4.0.0
 
 > [!NOTE]
 > Workspace root 路徑在此 skill 中一律以 `<WORKSPACE_ROOT>` 表示。
-> 實際路徑由腳本透過 `mfilename('fullpath')` 自我定位，**不存在任何硬編路徑**。
+> 實際路徑由程式碼透過 `mfilename('fullpath')` 自我定位，**不存在任何硬編路徑**。
 > 詳見 `references/02-session-protocol.md`。
 
 ---
@@ -44,7 +44,7 @@ MATLAB task 進來
 │   └─ YES → _shared\<category>\        →  references/05-shared-utilities.md
 │
 └─ 正式研究 / 明確目標 / 會跨對話延續？
-    └─ YES → projects\YYYYMMDD_<slug>\  →  執行 scripts/init_project.m
+    └─ YES → projects\YYYYMMDD_<slug>\  →  執行 skills/matlab-mcp-workspace/scripts/init_project.m
 ```
 
 **分類模糊時預設為 `_temp`**，在 Announcement 說明理由，詢問是否升級為 project。
@@ -74,8 +74,11 @@ MATLAB task 進來
 ├── _temp\             臨時測試（14 天生命週期）
 ├── _shared\           跨專案工具函數
 ├── _archive\          封存完成的專案
-├── scripts\           本 skill 工具腳本
-├── ws_config.m        Workspace 標記檔（勿移動）
+├── skills\                    
+│   └── matlab-mcp-workspace\  
+│       ├── scripts\           本 skill 工具腳本
+│       │   └── ws_config.m    Workspace 標記檔（勿移動）
+│       └── references\        Claude lookup 文件
 ├── startup.m          由 startup_workspace.m 自動維護
 └── .gitignore
 ```
@@ -84,12 +87,14 @@ MATLAB task 進來
 
 ## 4. Path Resolution（重要）
 
-`scripts\` 內所有腳本使用以下方式取得 workspace root，**不依賴任何硬編路徑**：
+`scripts\` 內所有程式碼使用以下方式取得 workspace root，**不依賴任何硬編路徑**：
 
 ```matlab
-% 方法 A：scripts\ 內的腳本（最直接）
-scripts_dir    = fileparts(mfilename('fullpath'));   % 腳本自身所在的 scripts\
-WORKSPACE_ROOT = fileparts(scripts_dir);            % 上一層即為 root
+% 方法 A：scripts\ 內的程式碼（最直接）
+scripts_dir    = fileparts(mfilename('fullpath'));   % 程式碼自身所在的 scripts\
+plugin_dir     = fileparts(scripts_dir);            % 上一層為 matlab-mcp-workspace\
+skills_dir     = fileparts(plugin_dir);             % 上一層為 skills\
+WORKSPACE_ROOT = fileparts(skills_dir);             % 再上一層即為 root
 
 % 方法 B：project src\ 內的使用者程式碼（需先執行 startup_workspace）
 WORKSPACE_ROOT = get_ws_root();   % 往上搜尋 ws_config.m 標記檔
@@ -105,21 +110,21 @@ WORKSPACE_ROOT = get_ws_root();   % 往上搜尋 ws_config.m 標記檔
 4. **Session Announcement 是對話中最先執行的動作**
 5. **每個新 project 必須同步生成 README.md**
 6. **`_temp\` 不得被其他 project 的程式碼 `addpath` 或 `run`**
-7. **任何腳本中禁止硬編 workspace root 的完整路徑**
+7. **任何程式碼中禁止硬編 workspace root 的完整路徑**
 8. **每次改動程式碼或檔案後，在回應最末端輸出 Docs Update Prompt（見 9. Docs Update Prompt）**
 
 ---
 
 ## 6. Script Reference
 
-| 腳本 | 何時呼叫 |
+| 程式碼 | 何時呼叫 |
 |------|----------|
-| `scripts/startup_workspace.m` | 每次 session 開始 |
-| `scripts/init_project.m` | 每個新 project |
-| `scripts/list_workspace.m` | 跨對話延續前 |
-| `scripts/upgrade_temp.m` | Temp 決定保留時 |
-| `scripts/workspace_health.m` | 定期清理 / 封存前 |
-| `scripts/get_ws_root.m` | `src\` 程式碼取得 root path |
+| `skills/matlab-mcp-workspace/scripts/startup_workspace.m` | 每次 session 開始 |
+| `skills/matlab-mcp-workspace/scripts/init_project.m` | 每個新 project |
+| `skills/matlab-mcp-workspace/scripts/list_workspace.m` | 跨對話延續前 |
+| `skills/matlab-mcp-workspace/scripts/upgrade_temp.m` | Temp 決定保留時 |
+| `skills/matlab-mcp-workspace/scripts/workspace_health.m` | 定期清理 / 封存前 |
+| `skills/matlab-mcp-workspace/scripts/get_ws_root.m` | `src\` 程式碼取得 root path |
 
 ---
 
@@ -130,14 +135,14 @@ WORKSPACE_ROOT = get_ws_root();   % 往上搜尋 ws_config.m 標記檔
 
 | 主題 | Reference（Claude lookup）| Docs（人類閱讀）|
 |------|--------------------------|-----------------|
-| 目錄結構、slug 命名、output 命名 | `references/01-workspace-structure.md` | `docs/01-workspace-structure.md` |
-| Session Announcement、path 管理 | `references/02-session-protocol.md` | `docs/02-session-protocol.md` |
-| 建立 → 開發 → 完成 → 封存 | `references/03-project-lifecycle.md` | `docs/03-project-lifecycle.md` |
-| Git 整合、.gitignore、backup 協議 | `references/04-versioning.md` | `docs/04-versioning.md` |
-| `_shared\` 函數標準、docstring、registry | `references/05-shared-utilities.md` | `docs/05-shared-utilities.md` |
-| 跨對話匹配、消歧流程 | `references/06-decision-guide.md` | `docs/06-decision-guide.md` |
-| **matlab-skills plugin 整合規則** | **`references/07-plugin-integration.md`** | **`docs/07-plugin-integration.md`** |
-| **專案 docs\ 文件規範** | **`references/08-project-docs.md`** | **`docs/08-project-docs.md`** |
+| 目錄結構、slug 命名、output 命名 | `skills/matlab-mcp-workspace/references/01-workspace-structure.md` | `docs/01-workspace-structure.md` |
+| Session Announcement、path 管理 | `skills/matlab-mcp-workspace/references/02-session-protocol.md` | `docs/02-session-protocol.md` |
+| 建立 → 開發 → 完成 → 封存 | `skills/matlab-mcp-workspace/references/03-project-lifecycle.md` | `docs/03-project-lifecycle.md` |
+| Git 整合、.gitignore、backup 協議 | `skills/matlab-mcp-workspace/references/04-versioning.md` | `docs/04-versioning.md` |
+| `_shared\` 函數標準、docstring、registry | `skills/matlab-mcp-workspace/references/05-shared-utilities.md` | `docs/05-shared-utilities.md` |
+| 跨對話匹配、消歧流程 | `skills/matlab-mcp-workspace/references/06-decision-guide.md` | `docs/06-decision-guide.md` |
+| **matlab-skills plugin 整合規則** | **`skills/matlab-mcp-workspace/references/07-plugin-integration.md`** | **`docs/07-plugin-integration.md`** |
+| **專案 docs\ 文件規範** | **`skills/matlab-mcp-workspace/references/08-project-docs.md`** | **`docs/08-project-docs.md`** |
 
 ---
 
