@@ -1,7 +1,18 @@
 ---
 name: matlab-mcp-workspace
 description: This skill MUST be used as the FIRST skill whenever Claude uses matlab-mcp-core-server to write, execute, debug, or manage any MATLAB code. Triggers on any mention of MATLAB, .m files, MATLAB scripts, MATLAB functions, "run this in MATLAB", "write a MATLAB", "debug MATLAB", "start a MATLAB project", "organize MATLAB workspace", "list MATLAB projects", or any task that produces MATLAB code files. Also triggers when asked to clean up, archive, inspect, or run health checks on the workspace. Enforces structured workspace under a configurable root (not hardcoded). THIS SKILL HANDLES WHERE FILES GO. The matlab-skills plugin (matlab-live-script, matlab-test-creator, matlab-test-execution, matlab-performance-optimizer, matlab-uihtml-app-builder, matlab-digital-filter-design) handles HOW the code is written. Always run this skill first to establish the workspace path, then let the appropriate matlab-skills skill handle code generation. Never skip workspace setup even when a matlab-skills skill is the primary trigger.
-version: 4.0.0
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+
+license: BSD-3-Clause (see LICENSE)
+metadata:
+  author: Jia-Ming Zhou
+  version: "1.0"
 ---
 
 # MATLAB MCP Workspace Management
