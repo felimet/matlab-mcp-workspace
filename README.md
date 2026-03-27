@@ -2,10 +2,6 @@
 
 > **Skill — MATLAB MCP Workspace 結構化管理 + matlab-skills Plugin 整合**
 
-> [!IMPORTANT]
-> 這個 skill 只做一件事：**確保每次寫程式前，Claude 知道程式碼要放在哪裡。**
-> 跟 `matlab-skills` plugin 的分工很清楚——它管路徑，那六個 skill 管程式碼本身。
-> 每次涉及 MATLAB，本 skill 的 Session Announcement 必須最先完成。
 
 [![matlab-mcp-core-server](https://img.shields.io/badge/matlab-matlab--mcp--core--server-blue?style=flat-square&logo=github)](https://github.com/matlab/matlab-mcp-core-server)
 [![matlab-skills](https://img.shields.io/badge/matlab-skills-blue?style=flat-square&logo=github)](https://github.com/matlab/skills)
@@ -68,30 +64,30 @@ init_project.m 建立 tests\ 等       執行 buildtool / runtests
 
 ## Workspace 根目錄結構
 
-```
+```text
 <WORKSPACE_ROOT>\
-├── projects\          正式任務（持久化，跨對話延續）
+├── projects\                   # 正式任務（持久化，跨對話延續）
 │   └── YYYYMMDD_<slug>\
-│       ├── README.md        跨 session 記憶載體
+│       ├── README.md           # 跨 session 記憶載體
 │       ├── main.m
-│       ├── buildfile.m      buildtool 入口（matlab-test-execution）
-│       ├── src\             模組化函數（按功能分子目錄）
-│       │   ├── <module>\    功能模組（如 preprocessing\、training\）
-│       │   ├── _backups\    結構性改寫備份
-│       │   └── html\        uihtml 前端（選用）
-│       ├── tests\           *Test.m（matlab-test-creator）
-│       ├── docs\            專案說明文件
+│       ├── buildfile.m         # buildtool 入口（matlab-test-execution）
+│       ├── src\                # 模組化函數（按功能分子目錄）
+│       │   ├── <module>\       # 功能模組（如 preprocessing\、training\）
+│       │   ├── _backups\       # 結構性改寫備份
+│       │   └── html\           # uihtml 前端（選用）
+│       ├── tests\              # *Test.m（matlab-test-creator）
+│       ├── docs\               # 專案說明文件
 │       │   ├── architecture.md
 │       │   ├── api.md
 │       │   └── experiments.md
 │       ├── data\
 │       └── output\
-├── _temp\             臨時測試（≤ 14 天生命週期）
-├── _shared\           跨專案工具函數（永久）
-├── _archive\          已完成專案（封存）
-├── scripts\           本 skill 工具腳本
-├── ws_config.m        Workspace 標記檔（勿移動）
-├── startup.m          由 startup_workspace.m 自動維護
+├── _temp\                      # 臨時測試（≤ 14 天生命週期）
+├── _shared\                    # 跨專案工具函數（永久）
+├── _archive\                   # 已完成專案（封存）
+├── scripts\                    # 本 skill 工具腳本
+├── ws_config.m                 # Workspace 標記檔（勿移動）
+├── startup.m                   # 由 startup_workspace.m 自動維護
 └── .gitignore
 ```
 
@@ -168,15 +164,15 @@ run('<WORKSPACE_ROOT>\scripts\workspace_health.m')
 
 ```text
 matlab-mcp-workspace/
-├── .claude-plugin/              ← Claude Code Plugin 設定目錄
-│   ├── plugin.json              ← Plugin manifest (設定名稱、版本等)
-│   └── marketplace.json         ← Marketplace 描述檔
-├── .gitignore                   ← Git 忽略清單
-├── LICENSE                      ← 授權條款 (BSD-3-Clause)
-├── README.md                    ← 本文件（導航入口）
-├── SKILL.md                     ← Claude 觸發與核心協議
-├── ws_config.m                  ← Workspace 根目錄標記（勿移動）
-├── references/                  
+├── .claude-plugin/                 # Claude Code Plugin 設定目錄
+│   ├── plugin.json                 # Plugin manifest (設定名稱、版本等)
+│   └── marketplace.json            # Marketplace 描述檔
+├── .gitignore                      # Git 忽略清單
+├── LICENSE                         # 授權條款 (BSD-3-Clause)
+├── README.md                       # 本文件（導航入口）
+├── SKILL.md                        # Claude 觸發與核心協議
+├── ws_config.m                     # Workspace 根目錄標記（勿移動）
+├── references/                     # 精簡版文件（表格 + 決策樹 + 模板）
 │   ├── 01-workspace-structure.md
 │   ├── 02-session-protocol.md
 │   ├── 03-project-lifecycle.md
@@ -185,7 +181,7 @@ matlab-mcp-workspace/
 │   ├── 06-decision-guide.md
 │   ├── 07-plugin-integration.md
 │   └── 08-project-docs.md
-├── docs/                        ← 完整操作說明文檔
+├── docs/                           # 完整操作說明文檔
 │   ├── 01-workspace-structure.md
 │   ├── 02-session-protocol.md
 │   ├── 03-project-lifecycle.md
@@ -194,13 +190,13 @@ matlab-mcp-workspace/
 │   ├── 06-decision-guide.md
 │   ├── 07-plugin-integration.md
 │   └── 08-project-docs.md
-└── scripts/                     ← MATLAB 工具腳本
-    ├── startup_workspace.m        ← 每次 session 開始時執行
-    ├── init_project.m             ← 建立新 project（含 tests\、docs\、buildfile.m）
-    ├── list_workspace.m           ← 跨對話繼續前列出專案狀態
-    ├── upgrade_temp.m             ← 將臨時測試升級為永久專案
-    ├── workspace_health.m         ← 定期清理檢查
-    └── get_ws_root.m              ← 取得 workspace 根目錄路徑
+└── scripts/                        # MATLAB 工具腳本
+    ├── startup_workspace.m         # 每次 session 開始時執行
+    ├── init_project.m              # 建立新 project（含 tests\、docs\、buildfile.m）
+    ├── list_workspace.m            # 跨對話繼續前列出專案狀態
+    ├── upgrade_temp.m              # 將臨時測試升級為永久專案
+    ├── workspace_health.m          # 定期清理檢查
+    └── get_ws_root.m               # 取得 workspace 根目錄路徑
 ```
 
 ---
