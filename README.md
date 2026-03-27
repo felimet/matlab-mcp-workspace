@@ -1,6 +1,6 @@
 # matlab-mcp-workspace
 
-> **Skill — MATLAB MCP Workspace 結構化管理 + matlab-skills Plugin 整合**
+> **Skill: MATLAB MCP Workspace 結構化管理 + matlab-skills Plugin 整合**
 
 
 [![matlab-mcp-core-server](https://img.shields.io/badge/matlab-matlab--mcp--core--server-blue?style=flat-square&logo=github)](https://github.com/matlab/matlab-mcp-core-server)
@@ -127,10 +127,6 @@ run('<WORKSPACE_ROOT>\scripts\workspace_health.m')
 | `scripts/get_ws_root.m` | 在 `src\` 程式碼中取得 workspace root |
 
 ---
-
-## 文件索引
-
-本 skill 的文件分為兩層：`references/` 為精簡版（表格 + 決策樹 + 模板），`docs/` 為完整操作文檔。
 
 ### references/
 
